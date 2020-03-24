@@ -3,7 +3,7 @@
   "main": "server.js",
   "dependencies": {
     "axios": "^0.19.2",
-    "ejs": "^1.0.0",
+    "ejs": "^3.0.1",
     "express": "^4.6.1"
   }
 }
