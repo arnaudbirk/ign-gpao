@@ -52,13 +52,15 @@ function updateJobStatus(req, res){
 }
 
 function insertJob(req, res){	
-	const command = req.body.command
+  const command = req.body.command
+  const name = req.body.name
+  const id_project = req.body.id_project
 	const status = 'ready'
 	const log = ''
 	
     pool.query(
-      'INSERT INTO jobs (command, status, log) VALUES ($1, $2, $3)',
-      [command, status, log],
+      'INSERT INTO jobs (command, name, id_project, status, log) VALUES ($1, $2, $3, $4, $5)',
+      [command, name, id_project, status, log],
       (error, results) => {
         if (error) {
           throw error

@@ -84,6 +84,10 @@
  *               properties:
  *                 command:
  *                   type: string
+ *                 name:
+ *                   type: string
+ *                 id_project:
+ *                   type: integer
  *                 
  *       responses:
  *         '200':
