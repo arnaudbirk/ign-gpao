@@ -1,0 +1,48 @@
+{
+    "projects":[
+        {
+            "name": "mon premier projet"
+        },
+        {
+            "name": "mon deuxieme projet"
+        }
+    ],
+    "projectDependencies":[
+        {
+            "from_id": 0,
+            "to_id": 1
+        }
+    ],
+    "jobs":[
+        {
+            "name": "test",
+            "command": "ls",
+            "id_project": 0
+        },
+        {
+            "name": "test",
+            "command": "ls",
+            "id_project": 0
+        },
+        {
+            "name": "test",
+            "command": "ls",
+            "id_project": 1
+        },
+        {
+            "name": "test",
+            "command": "ls",
+            "id_project": 1
+        }
+    ],
+    "jobDependencies":[
+        {
+            "from_id": 0,
+            "to_id": 1
+        },
+        {
+            "from_id": 2,
+            "to_id": 3
+        }
+    ]
+}

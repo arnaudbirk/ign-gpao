@@ -106,7 +106,13 @@
  *             schema:
  *               type: object
  *               properties:
- *                 name:
+ *                 projects:
+ *                   type: string
+ *                 projectDependencies:
+ *                   type: string
+ *                 jobs:
+ *                   type: string
+ *                 jobDependencies:
  *                   type: string
  *                 
  *       responses:
