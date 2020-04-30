@@ -92,4 +92,24 @@
  *       responses:
  *         '200':
  *           description: OK
+ *   '/project':
+ *     put:
+ *       tags:
+ *         - projects
+ *       summary: "Ajout d'un projet"
+ *       description: "Permet d ajout un projet avec ses differents jobs"
+ *       requestBody:
+ *         description: la structure du projet
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                 
+ *       responses:
+ *         '200':
+ *           description: OK
  */

@@ -15,4 +15,8 @@ router.put('/job',
     body('command').exists(),
     jobs.insertJob)
 
+router.put('/project', 
+    body('name').exists(),
+    jobs.insertProject)
+
 module.exports = router

@@ -70,9 +70,25 @@ function insertJob(req, res){
     )
 }
 
+function insertProject(req, res){	
+  const name = req.body.name
+	
+    pool.query(
+      'INSERT INTO projects ( name ) VALUES ($1)',
+      [name],
+      (error, results) => {
+        if (error) {
+          throw error
+        }
+        res.status(200).send(`Project inserted`)
+      }
+    )
+}
+
 module.exports = {
 	getAllJobs,
 	getJobReady,
 	updateJobStatus,
-	insertJob
+  insertJob,
+  insertProject
 }
