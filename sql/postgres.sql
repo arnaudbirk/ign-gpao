@@ -161,7 +161,7 @@ CREATE TABLE public.jobs (
     return_code integer,
     log character varying,
     id_project integer NOT NULL,
-    id_cluster integer NOT NULL
+    id_cluster integer
 );
 
 
