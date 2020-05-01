@@ -31,41 +31,47 @@ CREATE TYPE public.job_status AS ENUM (
 ALTER TYPE public.job_status OWNER TO postgres;
 
 --
--- Name: udate_jobDependency(); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: udate_jobdependency(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public."udate_jobDependency"() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$BEGIN
+CREATE OR REPLACE 
+FUNCTION public.udate_jobdependency()
+  RETURNS trigger AS
+$$
+BEGIN
   IF (NEW.status = 'done' AND NEW.status <> OLD.status) THEN
-       UPDATE jobDependencies SET active='f' WHERE from_id = NEW.id;
+       UPDATE public.jobdependencies SET active='f' WHERE from_id = NEW.id;
   END IF;
   RETURN NEW;
-END;$$;
+END;
+$$ LANGUAGE plpgsql;
 
 
-ALTER FUNCTION public."udate_jobDependency"() OWNER TO postgres;
+ALTER FUNCTION public.udate_jobdependency() OWNER TO postgres;
 
 --
 -- Name: update_job_status(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.update_job_status() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$BEGIN
+CREATE OR REPLACE 
+FUNCTION public.update_job_status()
+  RETURNS trigger AS
+$$
+BEGIN
     UPDATE jobs 
     SET status='ready' 
     WHERE 
     status='waiting' 
     AND NOT EXISTS (
-        SELECT * FROM jobDependencies WHERE  jobs.id = jobDependencies.from_id and jobDependencies.active = 't');  
+        SELECT * FROM public.jobdependencies AS d WHERE  jobs.id = d.to_id and d.active = 't');  
         -- Pas besoin de retourner un element puisqu on est sur un EACH STATEMENT
         -- c est a dire la fonction n est pas declenchee pour chaque ligne modifiee
         -- mais une fois pour toute commande modifiant la table
         -- ca peut faire une grosse difference puisqu on modifie la table avec
         -- des commandes du type : UPDATE dependencies SET active='f' WHERE from_id = NEW.id;
     RETURN NULL;
-END;$$;
+END;
+$$ LANGUAGE plpgsql;
 
 
 ALTER FUNCTION public.update_job_status() OWNER TO postgres;
@@ -115,7 +121,7 @@ ALTER SEQUENCE public.cluster_id_seq OWNED BY public.cluster.id;
 -- Name: jobDependencies; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public."jobDependencies" (
+CREATE TABLE public.jobdependencies (
     id integer NOT NULL,
     from_id integer NOT NULL,
     to_id integer NOT NULL,
@@ -123,13 +129,13 @@ CREATE TABLE public."jobDependencies" (
 );
 
 
-ALTER TABLE public."jobDependencies" OWNER TO postgres;
+ALTER TABLE public.jobdependencies OWNER TO postgres;
 
 --
--- Name: jobDependencies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: jobdependencies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public."jobDependencies_id_seq"
+CREATE SEQUENCE public.jobdependencies_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -138,13 +144,13 @@ CREATE SEQUENCE public."jobDependencies_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."jobDependencies_id_seq" OWNER TO postgres;
+ALTER TABLE public.jobdependencies_id_seq OWNER TO postgres;
 
 --
--- Name: jobDependencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: jobdependencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public."jobDependencies_id_seq" OWNED BY public."jobDependencies".id;
+ALTER SEQUENCE public.jobdependencies_id_seq OWNED BY public.jobdependencies.id;
 
 
 --
@@ -190,10 +196,10 @@ ALTER SEQUENCE public.jobs_id_seq OWNED BY public.jobs.id;
 
 
 --
--- Name: projectDependencies; Type: TABLE; Schema: public; Owner: postgres
+-- Name: projectdependencies; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public."projectDependencies" (
+CREATE TABLE public.projectdependencies (
     id integer NOT NULL,
     from_id integer NOT NULL,
     to_id integer NOT NULL,
@@ -201,13 +207,13 @@ CREATE TABLE public."projectDependencies" (
 );
 
 
-ALTER TABLE public."projectDependencies" OWNER TO postgres;
+ALTER TABLE public.projectdependencies OWNER TO postgres;
 
 --
--- Name: projectDependencies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: projectdependencies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public."projectDependencies_id_seq"
+CREATE SEQUENCE public.projectdependencies_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -216,13 +222,13 @@ CREATE SEQUENCE public."projectDependencies_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."projectDependencies_id_seq" OWNER TO postgres;
+ALTER TABLE public.projectdependencies_id_seq OWNER TO postgres;
 
 --
--- Name: projectDependencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: projectdependencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public."projectDependencies_id_seq" OWNED BY public."projectDependencies".id;
+ALTER SEQUENCE public.projectdependencies_id_seq OWNED BY public.projectdependencies.id;
 
 
 --
@@ -267,10 +273,10 @@ ALTER TABLE ONLY public.cluster ALTER COLUMN id SET DEFAULT nextval('public.clus
 
 
 --
--- Name: jobDependencies id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: jobdependencies id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."jobDependencies" ALTER COLUMN id SET DEFAULT nextval('public."jobDependencies_id_seq"'::regclass);
+ALTER TABLE ONLY public.jobdependencies ALTER COLUMN id SET DEFAULT nextval('public."jobdependencies_id_seq"'::regclass);
 
 
 --
@@ -281,10 +287,10 @@ ALTER TABLE ONLY public.jobs ALTER COLUMN id SET DEFAULT nextval('public.jobs_id
 
 
 --
--- Name: projectDependencies id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: projectdependencies id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."projectDependencies" ALTER COLUMN id SET DEFAULT nextval('public."projectDependencies_id_seq"'::regclass);
+ALTER TABLE ONLY public.projectdependencies ALTER COLUMN id SET DEFAULT nextval('public.projectdependencies_id_seq'::regclass);
 
 
 --
@@ -303,11 +309,11 @@ ALTER TABLE ONLY public.cluster
 
 
 --
--- Name: jobDependencies jobDependencies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: jobdependencies jobdependencies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."jobDependencies"
-    ADD CONSTRAINT "jobDependencies_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public.jobdependencies
+    ADD CONSTRAINT jobdependencies_pkey PRIMARY KEY (id);
 
 
 --
@@ -319,11 +325,11 @@ ALTER TABLE ONLY public.jobs
 
 
 --
--- Name: projectDependencies projectDependencies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: projectdependencies projectdependencies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."projectDependencies"
-    ADD CONSTRAINT "projectDependencies_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public.projectdependencies
+    ADD CONSTRAINT projectdependencies_pkey PRIMARY KEY (id);
 
 
 --
@@ -335,10 +341,10 @@ ALTER TABLE ONLY public.projects
 
 
 --
--- Name: jobDependencies from_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: jobdependencies from_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."jobDependencies"
+ALTER TABLE ONLY public.jobdependencies
     ADD CONSTRAINT from_id_fk FOREIGN KEY (from_id) REFERENCES public.jobs(id) ON DELETE CASCADE NOT VALID;
 
 
@@ -346,7 +352,7 @@ ALTER TABLE ONLY public."jobDependencies"
 -- Name: projectDependencies from_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."projectDependencies"
+ALTER TABLE ONLY public.projectdependencies
     ADD CONSTRAINT from_id_fk FOREIGN KEY (from_id) REFERENCES public.projects(id) ON DELETE CASCADE;
 
 
@@ -367,20 +373,43 @@ ALTER TABLE ONLY public.jobs
 
 
 --
--- Name: jobDependencies to_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: jobdependencies to_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."jobDependencies"
+ALTER TABLE ONLY public.jobdependencies
     ADD CONSTRAINT to_id_fk FOREIGN KEY (to_id) REFERENCES public.jobs(id) ON DELETE CASCADE NOT VALID;
 
 
 --
--- Name: projectDependencies to_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: projectdependencies to_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."projectDependencies"
+ALTER TABLE ONLY public.projectdependencies
     ADD CONSTRAINT to_id_fk FOREIGN KEY (to_id) REFERENCES public.projects(id) ON DELETE CASCADE;
 
+
+
+CREATE TRIGGER job_changes
+-- on ne declenche le trigger que pour des modifs sur status
+BEFORE UPDATE OF status ON public.jobs
+FOR EACH ROW
+EXECUTE PROCEDURE public.udate_jobdependency();
+
+CREATE TRIGGER dependency_changes
+-- on ne declenche le trigger que pour des modifs sur active
+AFTER UPDATE OF active ON public.jobdependencies
+-- on ne declenche pas pour chaque ligne modifee
+-- mais une fois pour chaque commande ayant modife la colonne active
+FOR EACH STATEMENT
+EXECUTE PROCEDURE public.update_job_status();
+
+CREATE TRIGGER new_dependency
+-- on ne declenche le trigger que pour des modifs sur active
+AFTER INSERT ON public.jobdependencies
+-- on ne declenche pas pour chaque ligne modifee
+-- mais une fois pour chaque commande ayant modife la colonne active
+FOR EACH STATEMENT
+EXECUTE PROCEDURE public.update_job_status();
 
 --
 -- PostgreSQL database dump complete
