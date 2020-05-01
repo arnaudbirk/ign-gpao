@@ -160,8 +160,8 @@ ALTER SEQUENCE public.jobdependencies_id_seq OWNED BY public.jobdependencies.id;
 CREATE TABLE public.jobs (
     id integer NOT NULL,
     name character varying NOT NULL,
-    start_date date,
-    end_date date,
+    start_date TIMESTAMPTZ,
+    end_date TIMESTAMPTZ,
     command character varying NOT NULL,
     status public.job_status NOT NULL,
     return_code integer,
