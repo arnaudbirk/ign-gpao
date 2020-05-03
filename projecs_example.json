@@ -16,22 +16,22 @@
     "jobs":[
         {
             "name": "test",
-            "command": "ls",
+            "command": "touch job0_chantier0",
             "id_project": 0
         },
         {
             "name": "test",
-            "command": "ls",
+            "command": "touch job1_chantier0",
             "id_project": 0
         },
         {
             "name": "test",
-            "command": "ls",
+            "command": "touch job0_chantier1",
             "id_project": 1
         },
         {
             "name": "test",
-            "command": "ls",
+            "command": "touch job1_chantier1",
             "id_project": 1
         }
     ],

@@ -82,7 +82,7 @@ function insertProject(req, res){
   console.log(jobDependencies)
 
   // On cree les projets
-  script = 'INSERT INTO projects (name) VALUES '
+  script = 'INSERT INTO projects (name, status) VALUES '
   first = true
   projects.forEach(project => {
     if (first){
@@ -90,7 +90,7 @@ function insertProject(req, res){
     }else{
       script += ','
     }
-    script += '(\'' + project.name + '\')'
+    script += '(\'' + project.name + '\', \'running\')'
   })
   script += ' RETURNING id'
 
@@ -101,6 +101,7 @@ function insertProject(req, res){
         if (error) {
           throw error
         }
+        console.log('insertion des projets: fait')
         // on recupere les id des projets
         results.rows.forEach( (row, i) => {
           projects[i].id = row.id
@@ -114,15 +115,17 @@ function insertProject(req, res){
           }else{
             script += ','
           }
-          script += '(\'' + job.name + '\',\'' + job.command + '\',' + projects[job.id_project].id + ', \'waiting\')'
+          script += '(\'' + job.name + '\',\'' + job.command + '\',' + projects[job.id_project].id + ', \'ready\')'
         })
         script += ' RETURNING id'
+        console.log(script)
         pool.query(
           script,
           (error, results) => {
             if (error) {
               throw error
             }
+            console.log('insertion des jobs: fait')
             // on recupere les id des jobs
             results.rows.forEach( (row, i) => {
               jobs[i].id = row.id
@@ -140,12 +143,14 @@ function insertProject(req, res){
               }
               script += '(' + projects[projectDependency.from_id].id + ',' + projects[projectDependency.to_id].id + ', true)'
             })
+            console.log(script)
             pool.query(
               script,
               (error, results) => {
                 if (error) {
                   throw error
                 }
+                console.log('insertion des projetdependencies: fait')
                 script = 'INSERT INTO jobdependencies (from_id, to_id, active) VALUES '
               first = true
               jobDependencies.forEach(jobDependency => {
@@ -156,13 +161,14 @@ function insertProject(req, res){
                 }
                 script += '(' + jobs[jobDependency.from_id].id + ',' + jobs[jobDependency.to_id].id + ', true)'
               })
+              console.log(script)
               pool.query(
                 script,
                 (error, results) => {
                   if (error) {
                     throw error
                   }
-                res.status(200).send(`Project inserted`)
+                  res.status(200).send(`Project inserted`)
                 })
               })
           })

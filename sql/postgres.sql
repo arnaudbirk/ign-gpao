@@ -27,54 +27,20 @@ CREATE TYPE public.job_status AS ENUM (
     'failed'
 );
 
+--
+-- Name: project_status; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.project_status AS ENUM (
+    'waiting',
+    'running',
+    'done',
+    'failed'
+);
+
 
 ALTER TYPE public.job_status OWNER TO postgres;
 
---
--- Name: udate_jobdependency(); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE OR REPLACE 
-FUNCTION public.udate_jobdependency()
-  RETURNS trigger AS
-$$
-BEGIN
-  IF (NEW.status = 'done' AND NEW.status <> OLD.status) THEN
-       UPDATE public.jobdependencies SET active='f' WHERE from_id = NEW.id;
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-
-ALTER FUNCTION public.udate_jobdependency() OWNER TO postgres;
-
---
--- Name: update_job_status(); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE OR REPLACE 
-FUNCTION public.update_job_status()
-  RETURNS trigger AS
-$$
-BEGIN
-    UPDATE jobs 
-    SET status='ready' 
-    WHERE 
-    status='waiting' 
-    AND NOT EXISTS (
-        SELECT * FROM public.jobdependencies AS d WHERE  jobs.id = d.to_id and d.active = 't');  
-        -- Pas besoin de retourner un element puisqu on est sur un EACH STATEMENT
-        -- c est a dire la fonction n est pas declenchee pour chaque ligne modifiee
-        -- mais une fois pour toute commande modifiant la table
-        -- ca peut faire une grosse difference puisqu on modifie la table avec
-        -- des commandes du type : UPDATE dependencies SET active='f' WHERE from_id = NEW.id;
-    RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-
-ALTER FUNCTION public.update_job_status() OWNER TO postgres;
 
 SET default_tablespace = '';
 
@@ -237,7 +203,8 @@ ALTER SEQUENCE public.projectdependencies_id_seq OWNED BY public.projectdependen
 
 CREATE TABLE public.projects (
     id integer NOT NULL,
-    name character varying NOT NULL
+    name character varying NOT NULL,
+    status public.project_status NOT NULL
 );
 
 
@@ -388,28 +355,191 @@ ALTER TABLE ONLY public.projectdependencies
     ADD CONSTRAINT to_id_fk FOREIGN KEY (to_id) REFERENCES public.projects(id) ON DELETE CASCADE;
 
 
+-- Lorsqu'un job passe à done, on desactive ses dep
+CREATE OR REPLACE 
+FUNCTION public.update_jobdependencies_when_job_done()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF (NEW.status = 'done' AND NEW.status <> OLD.status) THEN
+       UPDATE public.jobdependencies SET active='f' WHERE from_id = NEW.id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-CREATE TRIGGER job_changes
--- on ne declenche le trigger que pour des modifs sur status
-BEFORE UPDATE OF status ON public.jobs
+ALTER FUNCTION public.update_jobdependencies_when_job_done() OWNER TO postgres;
+
+CREATE TRIGGER update_jobdependencies_when_job_done
+AFTER UPDATE OF status ON public.jobs
 FOR EACH ROW
-EXECUTE PROCEDURE public.udate_jobdependency();
+EXECUTE PROCEDURE public.update_jobdependencies_when_job_done();
 
-CREATE TRIGGER dependency_changes
--- on ne declenche le trigger que pour des modifs sur active
+-- Lorsqu'un projet passe à done, on desactive ses dep
+CREATE OR REPLACE 
+FUNCTION public.update_projectdependencies_when_project_done()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF (NEW.status = 'done' AND NEW.status <> OLD.status) THEN
+       UPDATE public.projectdependencies SET active='f' WHERE from_id = NEW.id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION public.update_projectdependencies_when_project_done() OWNER TO postgres;
+
+CREATE TRIGGER update_projectdependencies_when_project_done
+AFTER UPDATE OF status ON public.projects
+FOR EACH ROW
+EXECUTE PROCEDURE public.update_projectdependencies_when_project_done();
+
+-- lorsqu'une dependance de job est modifiee, on vérifie si des jobs peuvent passer à ready
+CREATE OR REPLACE 
+FUNCTION public.update_job_when_jobdependency_unactivate()
+  RETURNS trigger AS
+$$
+BEGIN
+    UPDATE jobs 
+    SET status='ready' 
+    WHERE 
+    status='waiting' 
+    AND NOT EXISTS (
+        SELECT * FROM public.jobdependencies AS d WHERE  jobs.id = d.to_id and d.active = 't')
+    AND EXISTS (
+        SELECT * FROM public.projects AS p WHERE jobs.id_project = p.id and p.status = 'running');
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION public.update_job_when_jobdependency_unactivate() OWNER TO postgres;
+
+CREATE TRIGGER update_job_when_jobdependency_unactivate
 AFTER UPDATE OF active ON public.jobdependencies
--- on ne declenche pas pour chaque ligne modifee
--- mais une fois pour chaque commande ayant modife la colonne active
 FOR EACH STATEMENT
-EXECUTE PROCEDURE public.update_job_status();
+EXECUTE PROCEDURE public.update_job_when_jobdependency_unactivate();
 
-CREATE TRIGGER new_dependency
--- on ne declenche le trigger que pour des modifs sur active
-AFTER INSERT ON public.jobdependencies
--- on ne declenche pas pour chaque ligne modifee
--- mais une fois pour chaque commande ayant modife la colonne active
+-- lorsqu'un projet passe à running/waiting, on vérifie si des jobs doivent passer à ready/waiting
+CREATE OR REPLACE 
+FUNCTION public.update_job_when_project_change()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF (NEW.status = 'running' AND NEW.status <> OLD.status) THEN
+       UPDATE public.jobs SET status='ready' WHERE 
+       status='waiting' 
+       AND id_project = NEW.id
+       AND NOT EXISTS (
+        SELECT * FROM public.jobdependencies AS d WHERE  jobs.id = d.to_id and d.active = 't');
+  END IF;
+  IF (NEW.status = 'waiting' AND NEW.status <> OLD.status) THEN
+       UPDATE public.jobs SET status='waiting' WHERE 
+       status='ready' 
+       AND id_project = NEW.id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION public.update_job_when_project_change() OWNER TO postgres;
+
+CREATE TRIGGER update_job_when_project_change
+AFTER UPDATE OF status ON public.projects
+FOR EACH ROW
+EXECUTE PROCEDURE public.update_job_when_project_change();
+
+-- lorsqu'une dependance de projet est modifiée, on vérifie si des projets peuvent passer à running
+CREATE OR REPLACE 
+FUNCTION public.update_project_when_projectdepency_unactivate()
+  RETURNS trigger AS
+$$
+BEGIN
+    UPDATE projects 
+    SET status='running' 
+    WHERE 
+    status='waiting' 
+    AND NOT EXISTS (
+        SELECT * FROM public.projectdependencies AS d WHERE  projects.id = d.to_id and d.active = 't');
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION public.update_project_when_projectdepency_unactivate() OWNER TO postgres;
+
+CREATE TRIGGER update_project_when_projectdepency_unactivate
+AFTER UPDATE OF active ON public.projectdependencies
 FOR EACH STATEMENT
-EXECUTE PROCEDURE public.update_job_status();
+EXECUTE PROCEDURE public.update_project_when_projectdepency_unactivate();
+
+-- lorsqu'un job est terminé, on vérifie si son projet est aussi terminé
+CREATE OR REPLACE 
+FUNCTION public.update_project_when_job_done()
+  RETURNS trigger AS
+$$
+BEGIN
+    UPDATE projects 
+    SET status='done' 
+    WHERE 
+    status='running' 
+    AND NOT EXISTS (
+        SELECT * FROM public.jobs AS j WHERE  projects.id = j.id_project and j.status <> 'done');
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION public.update_project_when_job_done() OWNER TO postgres;
+
+CREATE TRIGGER update_project_when_job_done
+AFTER UPDATE OF status ON public.jobs
+FOR EACH STATEMENT
+EXECUTE PROCEDURE public.update_project_when_job_done();
+
+-- lorsqu'une dépendance de projet est ajoutée, on vérifie si des projets doivent passer à waiting
+CREATE OR REPLACE 
+FUNCTION public.update_project_when_projectdency_inserted()
+  RETURNS trigger AS
+$$
+BEGIN
+    UPDATE projects 
+    SET status='waiting' 
+    WHERE 
+    status='running' 
+    AND EXISTS (
+        SELECT * FROM public.projectdependencies AS d WHERE  projects.id = d.to_id and d.active = 't');
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION public.update_project_when_projectdency_inserted() OWNER TO postgres;
+
+CREATE TRIGGER update_project_when_projectdency_inserted
+AFTER INSERT ON public.projectdependencies
+FOR EACH STATEMENT
+EXECUTE PROCEDURE public.update_project_when_projectdency_inserted();
+
+-- lorsqu'une dependance de job est ajoutée on vérifie si des jobs doivent passer à waiting
+CREATE OR REPLACE 
+FUNCTION public.update_job_when_jobdependency_inserted()
+  RETURNS trigger AS
+$$
+BEGIN
+    UPDATE jobs 
+    SET status='waiting' 
+    WHERE 
+    status='ready' 
+    AND EXISTS (
+        SELECT * FROM public.jobdependencies AS d WHERE  jobs.id = d.to_id and d.active = 't');
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER FUNCTION public.update_job_when_jobdependency_inserted() OWNER TO postgres;
+
+CREATE TRIGGER update_job_when_jobdependency_inserted
+AFTER INSERT ON public.jobdependencies
+FOR EACH STATEMENT
+EXECUTE PROCEDURE public.update_job_when_jobdependency_inserted();
 
 --
 -- PostgreSQL database dump complete
