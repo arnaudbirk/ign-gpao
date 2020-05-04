@@ -17,12 +17,19 @@
  *       responses:
  *         '200':
  *           description: OK
- *   '/job/ready':
+ *   '/job/ready/{id_cluster}':
  *     get:
  *       tags:
  *         - jobs
  *       summary: "Récupération de l'identifiant d'un job"
  *       description: "Récupération de l'identifiant d'un job avec le status ready et mise à jour de son à jour de son status en running"
+ *       parameters:
+ *         - in: path
+ *           name: id_cluster
+ *           description: l'identifiant du cluster
+ *           required: true
+ *           schema:
+ *             type: integer
  *       responses:
  *         '200':
  *           description: OK
@@ -114,6 +121,41 @@
  *                   type: string
  *                 jobDependencies:
  *                   type: string
+ *                 
+ *       responses:
+ *         '200':
+ *           description: OK
+ *   '/projects':
+ *     get:
+ *       tags:
+ *         - projects
+ *       summary: "Récupération de tous les projets"
+ *       description: "Récupération de tous les projets quelque soit leur status"
+ *       responses:
+ *         '200':
+ *           description: OK
+ *   '/clusters':
+ *     get:
+ *       tags:
+ *         - clusters
+ *       summary: "Récupération de tous les clusters"
+ *       description: "Récupération de tous les clusters"
+ *       responses:
+ *         '200':
+ *           description: OK
+*   '/cluster/{host}':
+ *     put:
+ *       tags:
+ *         - clusters
+ *       summary: "Ajout d'un thread"
+ *       description: "Permet d'ajouter un thread aux clusters"
+ *       parameters:
+ *         - in: path
+ *           name: host
+ *           description: hostname
+ *           required: true
+ *           schema:
+ *             type: string
  *                 
  *       responses:
  *         '200':

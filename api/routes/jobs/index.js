@@ -3,7 +3,7 @@ const { query, body, param, oneOf } = require('express-validator/check');
 
 const jobs = require('./../../middlewares/jobs')
 
-router.get('/job/ready', jobs.getJobReady)
+router.get('/job/ready/:id_cluster', jobs.getJobReady)
 
 router.get('/jobs', jobs.getAllJobs)
 
@@ -18,5 +18,11 @@ router.put('/job',
 router.put('/project', 
     body('projects').exists(),
     jobs.insertProject)
+
+router.get('/projects', jobs.getAllProjects)
+
+router.get('/clusters', jobs.getAllClusters)
+
+router.put('/cluster/:host', jobs.insertCluster)
 
 module.exports = router

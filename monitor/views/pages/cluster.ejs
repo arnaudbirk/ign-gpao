@@ -1,0 +1,50 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("../partials/head") %>
+</head>
+<body class="container">
+
+<header>
+    <%- include ("../partials/header") %>
+</header>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#job').DataTable();
+	} );
+</script>
+  
+
+<main>
+    <div class="jumbotron">
+        <h2>Visualisation des Clusters</h2>
+        <table class="table table-striped table-bordered" style="width:100%" id="cluster">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>host</th>
+                    <th>id_thread</th>
+                    <th>active</th>
+                    <th>available</th>
+                </tr>
+            </thead>
+            <% json.forEach(function( cluster){ %>
+            <tr>
+                <td> <%= cluster.id %></td>
+                <td> <%= cluster.host %></td>
+                <td> <%= cluster.id_thread %></td>
+                <td> <%= cluster.active %></td>
+                <td> <%= cluster.available %></td>
+            </tr>
+            <% }) %>    </div>
+</main>
+
+<footer>
+    <%- include ("../partials/footer") %>
+</footer>
+
+</body>
+</html>

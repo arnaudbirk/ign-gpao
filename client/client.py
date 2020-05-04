@@ -4,19 +4,27 @@ import subprocess
 import json
 import time
 import os
+import socket
+
+HN=socket.gethostname()
 
 
 if __name__ == "__main__":
 
     print("Demarrage du client GPAO")
+    print("Hostname : ", HN)
 
     url_api = os.getenv('URL_API', 'localhost')
 
     print(url_api)
 
+    req=requests.put('http://'+url_api+':8080/api/cluster/'+HN)
+    id_cluster = req.json()[0]['id']
+    print(id_cluster)
+
     while True:
         print("Recherche d'un nouveau job")
-        req=requests.get('http://'+url_api+':8080/api/job/ready')
+        req=requests.get('http://'+url_api+':8080/api/job/ready/'+str(id_cluster))
         #print (req.json())
         if(len(req.json())!=0):
             id = req.json()[0]['id']

@@ -1,4 +1,6 @@
 const jobs = require('./../middlewares/job')
+const projects = require('./../middlewares/project')
+const clusters = require('./../middlewares/cluster')
 const router = require('express').Router()
 
 
@@ -18,14 +20,24 @@ router.get('/job', jobs.getJobs, function(req, res) {
     res.render('pages/job', {json:array})
   })
   
-// chantier page 
-router.get('/chantier', function(req, res) {
-    res.render('pages/chantier')
+// project page 
+router.get('/project', projects.getProjects, function(req, res) {
+    var array = []
+  
+    for(var i in req.body){
+      array.push(req.body[i])
+    }
+    res.render('pages/project', {json:array})
 })
   
-// ressource page 
-router.get('/ressource', function(req, res) {
-    res.render('pages/ressource')
+// cluster page 
+router.get('/cluster', clusters.getClusters, function(req, res) {
+    var array = []
+
+    for(var i in req.body){
+      array.push(req.body[i])
+    }
+    res.render('pages/cluster', {json:array})
 })
 
 module.exports = router
