@@ -1,0 +1,41 @@
+{
+  "name": "ign-gpao",
+  "version": "1.0.0",
+  "description": "application permettant d'instancier un calcul distribuer a l'aide d'un serveur Postgresql et de clients sur differentes machines\"",
+  "main": "start.sh",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "eslint": "^7.2.0",
+    "pre-commit": "^1.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "lint": "npx eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "pre-commit": {
+    "run": "lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnaudbirk/ign-gpao.git"
+  },
+  "keywords": [
+    "gpao",
+    "IGN",
+    "client",
+    "serveur",
+    "postgresql",
+    "nodejs",
+    "calcul distribué",
+    "Institut Géographique National"
+  ],
+  "author": "arnaud.birk@ign.fr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arnaudbirk/ign-gpao/issues"
+  },
+  "homepage": "https://github.com/arnaudbirk/ign-gpao#readme"
+}

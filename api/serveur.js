@@ -14,7 +14,7 @@ const PORT = 8080;
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '100mb', extended: true }));
 
 app.use((req, res, next) => {
   debug.log(req.method, ' ', req.path, ' ', req.body);

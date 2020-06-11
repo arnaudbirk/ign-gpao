@@ -18,7 +18,6 @@ function getInvalidJobsDependencies() {
   return 'La cohérence des dépendences entre jobs est invalide.';
 }
 
-
 module.exports = {
   getMissingParameterMsg,
   getInvalidParameterMsg,

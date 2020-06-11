@@ -1,5 +1,6 @@
 const { matchedData } = require('express-validator/filter');
 const debug = require('debug')('job');
+const format = require('pg-format');
 
 async function getAllJobs(req, res, next) {
   await req.client.query('SELECT * FROM jobs')
@@ -46,7 +47,7 @@ async function updateJobStatus(req, res, next) {
   debug(`log = ${log}`);
 
   await req.client.query(
-    'UPDATE jobs SET status = $1, log = $2, return_code = $4, end_date=NOW() WHERE id = $3', [status, log, id, returnCode],
+    format('UPDATE jobs SET status = $1, log = $2, return_code = $4, end_date=NOW() WHERE id = $3'), [status, log, id, returnCode],
   )
     .then((results) => { req.result = results.rows; })
     .catch((error) => {

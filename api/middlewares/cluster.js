@@ -14,7 +14,6 @@ async function getAllClusters(req, res, next) {
   next();
 }
 
-
 async function insertCluster(req, res, next) {
   const params = matchedData(req);
 
