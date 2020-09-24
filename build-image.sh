@@ -1,1 +1,1 @@
-docker-compose build --no-cache --force-rm
+docker-compose build --parallel --no-cache --force-rm
