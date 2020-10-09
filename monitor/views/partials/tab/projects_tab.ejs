@@ -1,0 +1,39 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-warning">Projets</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+        </tfoot>
+            <tbody>
+                <% json.forEach(function( project ){ %>
+                <tr>
+                    <td> <%= project.id %></td>
+                    <td> <%= project.name %></td>
+                    <td> <%= project.status %></td>
+                    <td>
+                        <button type="button" onclick='delChantier("<%= project.id %>", "<%= project.name %>")' data-toggle="tooltip" title="Supprime le projet de la base" class="btn btn-danger px-3"><i class="fas fa-trash fa-1x" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

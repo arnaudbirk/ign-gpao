@@ -1,0 +1,54 @@
+<!-- views/partials/jobs_info.ejs -->
+<div class="col-lg-6 mb-4">
+
+    <!-- Project Card Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Jobs</h6>
+    </div>
+    <div class="card-body">
+      <h4 class="small font-weight-bold">Ready<span id="job_status_ready_value" class="float-right"></span></h4>
+      <div class="progress mb-4">
+          <div id="job_status_ready_pg" class="progress-bar bg-primary" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+
+      <h4 class="small font-weight-bold">Running<span id="job_status_running_value" class="float-right"></span></h4>
+      <div class="progress mb-4">
+          <div id="job_status_running_pg" class="progress-bar bg-warning" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+
+      <h4 class="small font-weight-bold">Waiting<span id="job_status_waiting_value" class="float-right"></span></h4>
+      <div class="progress mb-4">
+          <div id="job_status_waiting_pg" class="progress-bar bg-secondary" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+
+      <h4 class="small font-weight-bold">Done<span id="job_status_done_value" class="float-right"></span></h4>
+      <div class="progress mb-4">
+          <div id="job_status_done_pg" class="progress-bar bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <h4 class="small font-weight-bold">Failed<span id="job_status_failed_value" class="float-right"><script>percent(<%= jobs_status.failed %>, <%= jobs_status.total %>);</script>%</span></h4>
+      <div class="progress mb-4">
+          <div id="job_status_failed_pg" class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {  
+      $('#job_status_ready_pg').attr('style', 'width: '+percent(<%= jobs_status.ready %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_ready_value').text(percent(<%= jobs_status.ready %>, <%= jobs_status.total %>)+"%");
+
+      $('#job_status_running_pg').attr('style', 'width: '+percent(<%= jobs_status.running %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_running_value').text(percent(<%= jobs_status.running %>, <%= jobs_status.total %>)+"%");
+
+      $('#job_status_waiting_pg').attr('style', 'width: '+percent(<%= jobs_status.waiting %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_waiting_value').text(percent(<%= jobs_status.waiting %>, <%= jobs_status.total %>)+"%");
+
+      $('#job_status_done_pg').attr('style', 'width: '+percent(<%= jobs_status.done %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_done_value').text(percent(<%= jobs_status.done %>, <%= jobs_status.total %>)+"%");
+
+      $('#job_status_failed_pg').attr('style', 'width: '+percent(<%= jobs_status.failed %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_failed_value').text(percent(<%= jobs_status.failed %>, <%= jobs_status.total %>)+"%");
+  } );
+  </script>

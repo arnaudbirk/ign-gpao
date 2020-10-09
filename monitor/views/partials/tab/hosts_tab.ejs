@@ -1,0 +1,44 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-info">Machines</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+              <tr>
+                <th>Host</th>
+                <th>Closed</th>
+                <th>Active</th>
+                <th>Idle</th>
+                <th>Running</th>
+                <th>Action</th>
+              </tr>
+          </thead>
+          <tfoot>
+              <tr>
+                <th>Host</th>
+                <th>Closed</th>
+                <th>Active</th>
+                <th>Idle</th>
+                <th>Running</th>
+                <th>Action</th>
+              </tr>
+          </tfoot>
+          <tbody>
+          <% json.forEach(function( host ){ %>
+              <tr>
+                <td> <%= host.host %></td>
+                <td> <%= host.closed %></td>
+                <td> <%= host.active %></td>
+                <td> <%= host.idle %></td>
+                <td> <%= host.running %></td>
+                <td>
+                    <button type="button" onclick='setNbThread("<%= host.host %>", "<%= host.active %>")' data-toggle="tooltip" title="Modifie le nombre de thread actif sur la machine" class="btn btn-info px-3"><i class="fas fa-cogs fa-1x" data-host="<%= host.host %>" data-active="<%= host.active %>" aria-hidden="true"></i></button>
+                </td>
+              </tr>
+          <% }) %>
+        </table>
+      </div>
+    </div>
+  </div>

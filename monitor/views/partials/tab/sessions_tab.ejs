@@ -1,0 +1,40 @@
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-success">Sessions</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="dataTable" cellspacing="0">
+          <thead>
+              <tr>
+                <th>Id</th>
+                <th>Host</th>
+                <th>Status</th>
+                <th>Date début</th>
+                <th>Date fin</th>
+              </tr>
+          </thead>
+          <tfoot>
+              <tr>
+                <th>Id</th>
+                <th>Host</th>
+                <th>Status</th>
+                <th>Date début</th>
+                <th>Date fin</th>
+              </tr>
+          </tfoot>
+          <tbody>
+            <% json.forEach(function( session ){ %>
+                <tr>
+                    <td> <%= session.id %></td>
+                    <td> <%= session.host %></td>
+                    <td> <%= session.status %></td>
+                    <td> <%= session.start_date %></td>
+                    <td> <%= session.end_date %></td>
+                </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

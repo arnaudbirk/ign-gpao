@@ -1,0 +1,59 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ("../partials/head") %>
+</head>
+<body class="container">
+
+<header>
+    <%- include ("../partials/header") %>
+</header>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#job').DataTable();
+	} );
+</script>
+  
+
+<main>
+    <div class="jumbotron">
+        <h2>Visualisation des jobs</h2>
+	<table class="table table-striped table-bordered" style="width:100%" id="job">
+		<thead>
+			<tr>
+				<th>id</th>
+				<th>command</th>
+				<th>status</th>
+				<th>log</th>
+				<th>Code retour</th>
+				<th>Date début</th>
+				<th>Date fin</th>
+				<th>id session</th>
+			</tr>
+		</thead>
+		<% json.forEach(function( job){ %>
+		<tr>
+			<td> <%= job.id %></td>
+			<td> <%= job.command %></td>
+			<td> <%= job.status %></td>
+			<td> <%= job.log %></td>
+			<td> <%= job.return_code %></td>
+			<td> <%= job.start_date %></td>
+			<td> <%= job.end_date %></td>
+			<td> <%= job.id_session %></td>
+		</tr>
+		<% }) %>
+ 
+	</table>
+    </div>
+</main>
+
+<footer>
+    <%- include ("../partials/footer") %>
+</footer>
+
+</body>
+</html>

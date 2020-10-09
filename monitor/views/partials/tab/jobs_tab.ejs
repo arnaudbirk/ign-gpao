@@ -1,0 +1,53 @@
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Jobs</h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped" id="dataTable" cellspacing="0">
+        <thead>
+			<tr>
+				<th>Id</th>
+				<th>Command</th>
+				<th>Status</th>
+				<th>Code retour</th>
+				<th>Date début</th>
+				<th>Date fin</th>
+        <th>Id session</th>
+        <th>Action</th>
+			</tr>
+		</thead>
+        <tfoot>
+			<tr>
+				<th>Id</th>
+				<th>Command</th>
+				<th>Status</th>
+				<th>Code retour</th>
+				<th>Date début</th>
+				<th>Date fin</th>
+        <th>Id session</th>
+        <th>Action</th>
+			</tr>
+        </tfoot>
+        <tbody>
+        <% json.forEach(function( job ){ %>
+            <tr>
+                <td> <%= job.id %></td>
+                <td> <%= job.command %></td>
+                <td> <%= job.status %></td>
+                <td> <%= job.return_code %></td>
+                <td> <%= job.start_date %></td>
+                <td> <%= job.end_date %></td>
+                <td> <%= job.id_session %></td>
+                <td>
+                    <button type="button" onclick="location.href='/job/<%= job.id %>'" data-toggle="tooltip" title="Affiche une vue détaillée sur le job <%= job.id %>" class="btn btn-info px-3">
+                        <i class="fas fa-search fa-1x" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

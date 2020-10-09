@@ -1,0 +1,44 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Dépendances</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="dataTable" cellspacing="0">
+          <thead>
+              <tr>
+                  <th>Id</th>
+                  <th>Job en amont</th>
+                  <th>Nom du job</th>
+                  <th>Statut</th>
+                  <th>Active</th>
+              </tr>
+          </thead>
+          <tfoot>
+              <tr>
+                  <th>Id</th>
+                  <th>Job en amont</th>
+                  <th>Nom du job</th>
+                  <th>Statut</th>
+                  <th>Active</th>
+              </tr>
+          </tfoot>
+          <tbody>
+          <% deps.forEach(function( dep ){ %>
+              <tr>
+                  <td> <%= dep.dep_id %></td>
+                  <td> <%= dep.dep_up %></td>
+                  <td> <%= dep.job_name %>
+                    <button type="button" onclick="location.href='/job/<%= dep.dep_up %>'" data-toggle="tooltip" title="Affiche une vue détaillée sur le job <%= job.id %>" class="btn btn-info px-3">
+                        <i class="fas fa-search fa-1x" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                  <td> <%= dep.job_status %>
+                  <td> <%= dep.dep_active %></td>
+              </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

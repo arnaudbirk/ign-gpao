@@ -1,0 +1,19 @@
+<!-- views/partials/jobs_info.ejs -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Job : <%= job.job_id %></h6>
+  </div>
+  <div class="card-body">
+      <ul class="list-group list-group-flush">
+          <li class="list-group-item">Id : <%= job.job_id %></li>
+          <li class="list-group-item">Nom du Job : <%= job.job_name %></li>
+          <li class="list-group-item">Date de début : <%= job.job_start_date %></li>
+          <li class="list-group-item">Date de Fin : <%= job.job_end_date %></li>
+          <li class="list-group-item">Statut : <%= job.job_status %></li>
+          <li class="list-group-item">Code de retour : <%= job.job_return_code %></li>
+          <li class="list-group-item">Id Projet : <%= job.project_id %></li>
+          <li class="list-group-item">Nom du Projet : <%= job.project_name %></li>
+          <li class="list-group-item">Id Session : <%= job.job_id_session %></li>
+      </ul>        
+  </div>
+</div>
