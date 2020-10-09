@@ -18,10 +18,12 @@ router.get('/', jobs.getJobStatus, projects.getProjects, (req, res) => {
 
 // jobs page
 router.get('/job/:id', jobs.getJob, dependencies.getDependencies, (req, res) => {
-  const job = req.job;
-  const deps = req.deps;
+  const { job } = req;
+  const { deps } = req;
 
-  res.render('pages/job', { id: req.params.id, api: req.app.api_url, job: job, deps: deps });
+  res.render('pages/job', {
+    id: req.params.id, api: req.app.api_url, job, deps,
+  });
 });
 
 // jobs page

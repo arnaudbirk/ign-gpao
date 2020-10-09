@@ -8,21 +8,26 @@ async function getJobs(req, res, next) {
 }
 
 async function getJob(req, res, next) {
-  const json = await axios.get(`${req.app.api_url}/api/job/`+req.params.id);
+  const json = await axios.get(`${req.app.api_url}/api/job/${req.params.id}`);
 
-  req.job = json.data[0];
+  const idJob = json.data[0];
+
+  req.job = idJob;
+
   next();
 }
 
 async function getJobStatus(req, res, next) {
   const json = await axios.get(`${req.app.api_url}/api/jobs/status`);
 
-  req.jobs_status = json.data[0];
+  const jobStatus = json.data[0];
+
+  req.jobs_status = jobStatus;
   next();
 }
 
 module.exports = {
   getJobs,
   getJob,
-  getJobStatus
+  getJobStatus,
 };

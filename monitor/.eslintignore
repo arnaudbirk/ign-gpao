@@ -1,0 +1,11 @@
+resources/css/*
+resources/js/*
+resources/vendor/bootstrap/*
+resources/vendor/chart.js/*
+resources/vendor/datatables/*
+resources/vendor/fontawesome-free/*
+resources/vendor/jquery/*
+resources/vendor/jquery-easing/*
+
+# Disable ign source code 
+resources/vendor/ign/*
