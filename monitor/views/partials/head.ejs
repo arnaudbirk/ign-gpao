@@ -1,14 +1,58 @@
 <!-- views/partials/head.ejs -->
-<meta charset="UTF-8">
-<title>Monitor GPAO</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Moniteur GPAO de l'IGN">
+<meta name="author" content="IDI">
 
-<!-- CSS (load bootstrap from a CDN) -->
-<!--link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-<style>
-    body    { padding-top:50px; }
-</style>
+<!-- Custom fonts for this template-->
+<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+<!-- Custom styles for this template-->
+<link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<!--script src="vendor/jquery-easing/jquery.easing.min.js"></script-->
+
+<!-- Page level plugins -->
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- GPAO script -->
+<script src="/vendor/ign/gpao.js" api-url="<%= api %>"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#dataTable').DataTable( {
+        "language": {
+            "lengthMenu": "Afficher _MENU_ par page",
+            "zeroRecords": "Aucun éléments",
+            "info": "Page _PAGE_ sur _PAGES_",
+            "infoEmpty": "Aucun enregistrement disponible",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "search": "Rechercher",
+            "paginate": {
+                "first":	"Premier",
+                "previous":	"Pr&eacute;c&eacute;dent",
+                "next":	"Suivant",
+                "last":	"Dernier"
+            }
+        },
+        "order": [[ 0, "asc" ]],
+        "dom": '<"d-flex"<"mr-auto p-2"l><"p-2"f>>t<"d-flex"<"mr-auto p-2"i><"p-2"p>>'
+    } );
+
+    $('#job_status_pg').attr('style', 'width: 50%');
+} );
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+});
+
+</script>

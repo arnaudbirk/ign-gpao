@@ -18,6 +18,10 @@ app.set('view engine', 'ejs');
 
 const routes = require('./routes');
 
+app.use('/vendor', express.static(__dirname + '/resources/vendor'));
+app.use('/css', express.static(__dirname + '/resources/css'));
+app.use('/js', express.static(__dirname + '/resources/js'));
+
 // use res.render to load up an ejs view file
 app.use('/', routes);
 app.api_url = `http://${URL_API}:${URL_API_PORT}`;

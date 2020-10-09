@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const {
-  query, body,
+  query, body, param,
 } = require('express-validator/check');
 
 const validateParams = require('../../middlewares/validateParams');
@@ -21,9 +21,27 @@ jobs.getJobReady,
 pgClient.close,
 returnMsg);
 
+router.get('/job/:id', [
+  param('id')
+    .exists().withMessage(createErrorMsg.getMissingParameterMsg('id'))
+    .isInt({ min: 1 })
+    .withMessage(createErrorMsg.getInvalidParameterMsg('id')),
+],
+validateParams,
+pgClient.open,
+jobs.getJob,
+pgClient.close,
+returnMsg);
+
 router.get('/jobs',
   pgClient.open,
   jobs.getAllJobs,
+  pgClient.close,
+  returnMsg);
+
+router.get('/jobs/status',
+  pgClient.open,
+  jobs.getJobStatus,
   pgClient.close,
   returnMsg);
 

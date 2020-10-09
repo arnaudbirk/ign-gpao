@@ -1,18 +1,26 @@
 <!-- views/partials/header.ejs -->
+<div class="row">
+  <div class="col-sm-3">
+    <h1>Projects</h1>
+    <nav>
+        <ul class="nav float-left">
+            <li><a class="btn btn-outline-primary nav-item nav-link" href="#">Créer un chantier à partir d'un Json</a></li>
+            <li><a class="btn btn-outline-primary nav-item nav-link" href="#">Créer un chantier à partir d'un fichier texte</a></li>
+        </ul>
+    </nav>
+  </div>
 
-<p class="text-center text-muted">GPAO Monitor for : <%= api %></p>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="">Accueil <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="/job">Jobs</a>
-        <a class="nav-item nav-link" href="/session">Sessions</a>
-        <a class="nav-item nav-link" href="/host">Hosts</a>
-        <a class="nav-item nav-link" href="/project">Projects</a>  
+  <div class="col-sm-1">
+    <nav class="navbar navbar-expand-lg">
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="btn btn-success nav-item nav-link" href="/">Accueil</a>
+          <a class="btn btn-success nav-item nav-link" href="/job">Jobs</a>
+          <a class="btn btn-success nav-item nav-link" href="/session">Sessions</a>
+          <a class="btn btn-success nav-item nav-link" href="/host">Hosts</a>
+          <a class="btn btn-success nav-item nav-link" href="/project">Projects</a>  
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
+</div>

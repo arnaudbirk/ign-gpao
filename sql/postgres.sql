@@ -515,6 +515,139 @@ ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
 
 
 --
+-- Name: view_dependencies; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.view_dependencies AS
+ SELECT jobdependencies.id AS dep_id,
+    jobdependencies.upstream AS dep_up,
+    jobdependencies.downstream AS dep_down,
+    jobdependencies.active AS dep_active,
+    jobs.id AS job_id,
+    jobs.name AS job_name,
+    jobs.start_date AS job_start_date,
+    jobs.end_date AS job_end_date,
+    jobs.status AS job_status,
+    jobs.return_code AS jobs_return_code
+   FROM (public.jobdependencies
+     JOIN public.jobs ON ((jobs.id = jobdependencies.upstream)));
+
+
+ALTER TABLE public.view_dependencies OWNER TO postgres;
+
+--
+-- Name: view_job; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.view_job AS
+ SELECT jobs.id AS job_id,
+    jobs.name AS job_name,
+    jobs.start_date AS job_start_date,
+    jobs.end_date AS job_end_date,
+    jobs.command AS job_command,
+    jobs.status AS job_status,
+    jobs.return_code AS job_return_code,
+    jobs.log AS job_log,
+    projects.id AS project_id,
+    projects.name AS project_name,
+    projects.status AS project_status,
+    sessions.id AS session_id,
+    sessions.host AS session_host,
+    sessions.start_date AS session_start_date,
+    sessions.end_date AS session_end_date,
+    sessions.status AS session_status
+   FROM ((public.jobs
+     JOIN public.projects ON ((projects.id = jobs.id_project)))
+     LEFT JOIN public.sessions ON ((sessions.id = jobs.id_session)));
+
+
+ALTER TABLE public.view_job OWNER TO postgres;
+
+--
+-- Name: view_job_status; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.view_job_status AS
+ SELECT sum(
+        CASE
+            WHEN (jobs.status = 'ready'::public.status) THEN 1
+            ELSE 0
+        END) AS ready,
+    sum(
+        CASE
+            WHEN (jobs.status = 'done'::public.status) THEN 1
+            ELSE 0
+        END) AS done,
+    sum(
+        CASE
+            WHEN (jobs.status = 'waiting'::public.status) THEN 1
+            ELSE 0
+        END) AS waiting,
+    sum(
+        CASE
+            WHEN (jobs.status = 'running'::public.status) THEN 1
+            ELSE 0
+        END) AS running,
+    sum(
+        CASE
+            WHEN (jobs.status = 'failed'::public.status) THEN 1
+            ELSE 0
+        END) AS failed,
+    sum(
+        CASE
+            WHEN ((jobs.status = 'failed'::public.status) OR (jobs.status = 'running'::public.status) OR (jobs.status = 'waiting'::public.status) OR (jobs.status = 'done'::public.status) OR (jobs.status = 'ready'::public.status)) THEN 1
+            ELSE 0
+        END) AS total
+   FROM public.jobs;
+
+
+ALTER TABLE public.view_job_status OWNER TO postgres;
+
+--
+-- Name: view_project_status; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.view_project_status AS
+ SELECT jobs.id_project,
+    projects.name,
+    sum(
+        CASE
+            WHEN (jobs.status = 'ready'::public.status) THEN 1
+            ELSE 0
+        END) AS ready,
+    sum(
+        CASE
+            WHEN (jobs.status = 'done'::public.status) THEN 1
+            ELSE 0
+        END) AS done,
+    sum(
+        CASE
+            WHEN (jobs.status = 'waiting'::public.status) THEN 1
+            ELSE 0
+        END) AS waiting,
+    sum(
+        CASE
+            WHEN (jobs.status = 'running'::public.status) THEN 1
+            ELSE 0
+        END) AS running,
+    sum(
+        CASE
+            WHEN (jobs.status = 'failed'::public.status) THEN 1
+            ELSE 0
+        END) AS failed,
+    sum(
+        CASE
+            WHEN ((jobs.status = 'failed'::public.status) OR (jobs.status = 'running'::public.status) OR (jobs.status = 'waiting'::public.status) OR (jobs.status = 'done'::public.status) OR (jobs.status = 'ready'::public.status)) THEN 1
+            ELSE 0
+        END) AS total
+   FROM (public.jobs
+     JOIN public.projects ON ((projects.id = jobs.id_project)))
+  GROUP BY jobs.id_project, projects.name;
+
+
+ALTER TABLE public.view_project_status OWNER TO postgres;
+
+--
 -- Name: jobdependencies id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 

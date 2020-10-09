@@ -3,15 +3,9 @@ info:
   title: "API GPAO"
   version: "1.0.0"
   description: "Documentation de l'API mise en place dans le cadre de la refonte de la GPAO."
-servers: 
-  - url: "http://koolyce.ddns.net:8080/api"
-    description: "Serveur d'Arnaud"
-  - url: "http://pocandco.hopto.org:8080/api"
-    description: "Serveur de Greg"
+servers:
   - url: "http://localhost:8080/api"
-    description: "Serveur de dev"
-  - url: "http://api-gpao:8080/api"
-    description: "Serveur de test"
+    description: "Serveur de production"
 tags:
   - name: jobs
     description: Manipulation des jobs
@@ -19,13 +13,40 @@ tags:
     description: Manipulation des projets
   - name: sessions
     description: Manipulation des sessions
+  - name: dependencies
+    description: Manipulation des dépendances
 paths:
   '/jobs':
     get:
       tags:
         - jobs
       summary: "Récupération de tous les jobs"
-      description: "Récupération de tous les jobs quelque soit son status"
+      description: "Récupération de tous les jobs quelque soit son statut"
+      responses:
+        '200':
+          description: OK
+  '/jobs/status':
+    get:
+      tags:
+        - jobs
+      summary: "Récupération du nombre de jobs par statut"
+      description: "Récupération du nombre de jobs par statut et du total de jobs dans la base"
+      responses:
+        '200':
+          description: OK
+  '/job/{id}':
+    get:
+      tags:
+        - jobs
+      summary: "Récupération d'un job en particulier"
+      description: "Récupération de toutes les informations relatives à un job en fonction de son id"
+      parameters:
+        - in: path
+          name: id
+          description: l'identifiant du job
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: OK
@@ -219,6 +240,22 @@ paths:
         - in: query
           name: id
           description: id de session
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  '/dependency':
+    get:
+      tags:
+        - dependencies
+      summary: "Récupération des dépendences"
+      description: "Récupération de toutes les dépendences liées à un job"
+      parameters:
+        - in: query
+          name: id_job
+          description: l'identifiant du job pour lequel on souhaite récupérer les dépendances
           required: true
           schema:
             type: integer

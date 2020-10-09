@@ -14,6 +14,35 @@ async function getAllJobs(req, res, next) {
   next();
 }
 
+async function getJobStatus(req, res, next) {
+  await req.client.query('SELECT * FROM view_job_status')
+    .then((results) => { req.result = results.rows; })
+    .catch((error) => {
+      req.error = {
+        msg: error.toString(),
+        code: 500,
+        function: 'getJobStatus',
+      };
+    });
+  next();
+}
+
+async function getJob(req, res, next) {
+  const params = matchedData(req);
+
+  const { id } = params;
+  await req.client.query('SELECT * FROM view_job WHERE job_id=$1', [id])
+    .then((results) => { req.result = results.rows; })
+    .catch((error) => {
+      req.error = {
+        msg: error.toString(),
+        code: 500,
+        function: 'getJob',
+      };
+    });
+  next();
+}
+
 async function getJobReady(req, res, next) {
   const params = matchedData(req);
 
@@ -62,6 +91,8 @@ async function updateJobStatus(req, res, next) {
 
 module.exports = {
   getAllJobs,
+  getJobStatus,
   getJobReady,
+  getJob,
   updateJobStatus,
 };

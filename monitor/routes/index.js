@@ -3,51 +3,66 @@ const jobs = require('../middlewares/job');
 const projects = require('../middlewares/project');
 const sessions = require('../middlewares/session');
 const hosts = require('../middlewares/host');
+const dependencies = require('../middlewares/dependencies');
 
-// home page
-router.get('/', (req, res) => {
-  res.render('pages/index', { api: req.app.api_url });
-});
-
-// job page
-router.get('/job', jobs.getJobs, (req, res) => {
+// dashboard page
+router.get('/', jobs.getJobStatus, projects.getProjects, (req, res) => {
   const array = [];
 
   req.body.forEach((element) => {
     array.push(element);
   });
 
-  res.render('pages/job', { json: array, api: req.app.api_url });
+  res.render('pages/index', { jobs_status: req.jobs_status, json: array, api: req.app.api_url });
 });
 
-// project page
-router.get('/project', projects.getProjects, (req, res) => {
+// jobs page
+router.get('/job/:id', jobs.getJob, dependencies.getDependencies, (req, res) => {
+  const job = req.job;
+  const deps = req.deps;
+
+  res.render('pages/job', { id: req.params.id, api: req.app.api_url, job: job, deps: deps });
+});
+
+// jobs page
+router.get('/jobs', jobs.getJobs, (req, res) => {
   const array = [];
 
   req.body.forEach((element) => {
     array.push(element);
   });
-  res.render('pages/project', { json: array, api: req.app.api_url });
+
+  res.render('pages/jobs', { json: array, api: req.app.api_url });
 });
 
-// session page
-router.get('/session', sessions.getSessions, (req, res) => {
+// projects page
+router.get('/projects', projects.getProjects, (req, res) => {
   const array = [];
 
   req.body.forEach((element) => {
     array.push(element);
   });
-  res.render('pages/session', { json: array, api: req.app.api_url });
+  res.render('pages/projects', { json: array, api: req.app.api_url });
 });
 
-// host page
-router.get('/host', hosts.getHosts, (req, res) => {
+// sessions page
+router.get('/sessions', sessions.getSessions, (req, res) => {
   const array = [];
 
   req.body.forEach((element) => {
     array.push(element);
   });
-  res.render('pages/host', { json: array, api: req.app.api_url });
+  res.render('pages/sessions', { json: array, api: req.app.api_url });
+});
+
+// hosts page
+router.get('/hosts', hosts.getHosts, (req, res) => {
+  const array = [];
+
+  req.body.forEach((element) => {
+    array.push(element);
+  });
+  res.render('pages/hosts', { json: array, api: req.app.api_url });
 });
 
 module.exports = router;
