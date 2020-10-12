@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function getProjects(req, res, next) {
-  const json = await axios.get(`${req.app.get('apiUrl')}/api/projects`);
+  const json = await axios.get(`${req.app.get('apiUrl')}/api/projects/status`);
 
   const projects = json.data;
 

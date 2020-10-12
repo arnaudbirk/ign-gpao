@@ -7,13 +7,25 @@
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-warning">Projects</h6>
       </div>
-      <div class="card-body">
+      <div id="no-elements" class="card-body">
           <% projects.forEach(function( project ){ %>
-              <h4 class="small font-weight-bold"><%= project.name %><span class="float-right">20%</span></h4>
+              <h4 class="small font-weight-bold"><%= project.name %><span id="topbar_project_value_<%= project.id_project %>" class="float-right">0%</span></h4>
               <div class="progress mb-4">
-                  <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div id="topbar_project_pg_<%= project.id_project %>" class="progress-bar bg-danger" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
           <% }) %>
       </div>
     </div>
   </div>
+
+  <script type="text/javascript">
+    $(document).ready(function() {  
+      <% projects.forEach(function( project ){ %>
+        $('#topbar_project_pg_<%= project.id_project %>').attr('style', 'width: '+percent(<%= project.done %>, <%= project.total %>)+"%");
+        $('#topbar_project_value_<%= project.id_project %>').text(percent(<%= project.done %>, <%= project.total %>)+"%");
+      <% }) %>
+      <% if (projects.length==0) { %>
+          $('#no-elements').append( "<strong>Aucun projet dans la base</strong>" );
+        <% } %>
+    } );
+    </script>
