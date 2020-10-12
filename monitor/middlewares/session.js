@@ -1,9 +1,10 @@
 const axios = require('axios');
 
 async function getSessions(req, res, next) {
-  const json = await axios.get(`${req.app.api_url}/api/sessions`);
+  const json = await axios.get(`${req.app.get('apiUrl')}/api/sessions`);
 
-  req.body = json.data;
+  const sessions = json.data;
+  req.sessions = sessions;
   next();
 }
 

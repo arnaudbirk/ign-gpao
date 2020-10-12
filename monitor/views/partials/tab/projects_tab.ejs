@@ -22,13 +22,13 @@
             </tr>
         </tfoot>
             <tbody>
-                <% json.forEach(function( project ){ %>
+                <% projects.forEach(function( project ){ %>
                 <tr>
                     <td> <%= project.id %></td>
                     <td> <%= project.name %></td>
                     <td> <%= project.status %></td>
                     <td>
-                        <button type="button" onclick='delChantier("<%= project.id %>", "<%= project.name %>")' data-toggle="tooltip" title="Supprime le projet de la base" class="btn btn-danger px-3"><i class="fas fa-trash fa-1x" aria-hidden="true"></i></button>
+                        <button type="button" onclick='delChantier("<%= project.id %>", "<%= project.name %>")' data-toggle="tooltip" title="Supprime le projet de la base" class="btn btn-circle btn-danger"><i class="fas fa-trash fa-1x" aria-hidden="true"></i></button>
                     </td>
                 </tr>
                 <% }) %>

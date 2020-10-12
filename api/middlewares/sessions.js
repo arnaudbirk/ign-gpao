@@ -14,6 +14,19 @@ async function getAllSessions(req, res, next) {
   next();
 }
 
+async function getSessionStatus(req, res, next) {
+  await req.client.query('SELECT * FROM view_sessions_status')
+    .then((results) => { req.result = results.rows; })
+    .catch((error) => {
+      req.error = {
+        msg: error.toString(),
+        code: 500,
+        function: 'getSessionStatus',
+      };
+    });
+  next();
+}
+
 async function insertSession(req, res, next) {
   const params = matchedData(req);
 
@@ -59,6 +72,7 @@ async function closeSession(req, res, next) {
 
 module.exports = {
   getAllSessions,
+  getSessionStatus,
   insertSession,
   closeSession,
 };

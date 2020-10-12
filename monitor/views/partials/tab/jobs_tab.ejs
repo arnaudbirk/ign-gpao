@@ -30,7 +30,7 @@
 			</tr>
         </tfoot>
         <tbody>
-        <% json.forEach(function( job ){ %>
+        <% jobs.forEach(function( job ){ %>
             <tr>
                 <td> <%= job.id %></td>
                 <td> <%= job.command %></td>
@@ -40,7 +40,7 @@
                 <td> <%= job.end_date %></td>
                 <td> <%= job.id_session %></td>
                 <td>
-                    <button type="button" onclick="location.href='/job/<%= job.id %>'" data-toggle="tooltip" title="Affiche une vue détaillée sur le job <%= job.id %>" class="btn btn-info px-3">
+                    <button type="button" onclick="location.href='/job/<%= job.id %>'" data-toggle="tooltip" title="Affiche une vue détaillée sur le job <%= job.id %>" class="btn btn-circle btn-info">
                         <i class="fas fa-search fa-1x" aria-hidden="true"></i>
                     </button>
                 </td>

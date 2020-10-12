@@ -214,6 +214,15 @@ paths:
       responses:
         '200':
           description: OK
+  '/sessions/status':
+    get:
+      tags:
+        - sessions
+      summary: "Récupération du status de toutes les sessions"
+      description: "Récupération du nombre de sessions pour chaque type de statut"
+      responses:
+        '200':
+          description: OK
   '/session':
     put:
       tags:

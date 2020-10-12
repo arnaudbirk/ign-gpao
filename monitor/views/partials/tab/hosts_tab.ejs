@@ -26,7 +26,7 @@
               </tr>
           </tfoot>
           <tbody>
-          <% json.forEach(function( host ){ %>
+          <% hosts.forEach(function( host ){ %>
               <tr>
                 <td> <%= host.host %></td>
                 <td> <%= host.closed %></td>
@@ -34,7 +34,7 @@
                 <td> <%= host.idle %></td>
                 <td> <%= host.running %></td>
                 <td>
-                    <button type="button" onclick='setNbThread("<%= host.host %>", "<%= host.active %>")' data-toggle="tooltip" title="Modifie le nombre de thread actif sur la machine" class="btn btn-info px-3"><i class="fas fa-cogs fa-1x" data-host="<%= host.host %>" data-active="<%= host.active %>" aria-hidden="true"></i></button>
+                    <button type="button" onclick='setNbThread("<%= host.host %>", "<%= host.active %>")' data-toggle="tooltip" title="Modifie le nombre de thread actif sur la machine" class="btn btn-circle btn-info"><i class="fas fa-cogs fa-1x" data-host="<%= host.host %>" data-active="<%= host.active %>" aria-hidden="true"></i></button>
                 </td>
               </tr>
           <% }) %>

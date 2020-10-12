@@ -30,5 +30,59 @@ function setNbThread(host, active) {
 
 // Fonction qui permet de calculer le pourcentage entre une valeur et le total
 function percent(num, per) {
+  if(per==0)
+    return 0;
   return (Math.round((num / per) * 100));
+}
+
+function jsonChanged(file) {
+  var reader = new FileReader();
+  reader.addEventListener('load', function(e) {
+  // contents of file in variable     
+    var json = e.target.result;
+    // on fait une requete sur l'API
+    fetch(`${apiUrl}/api/project`, {
+      method: "PUT",
+      body: json,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(() => {
+      location.reload();
+    });
+  });
+  // read as text file
+  reader.readAsText(file);  
+}
+
+function txtChanged(file) {
+  var reader = new FileReader();
+  reader.addEventListener('load', function(e) {
+  // contents of file in variable     
+    var text = e.target.result.split(/\r\n|\n/);
+    let P = { projects:[{name: file.name, jobs:[]}]};
+    let lastId;
+    text.forEach((line, index) => {
+      if (line.length>0){
+        let job = {name: `job ${index}`, command: line};
+        if (lastId !== undefined){
+          job.deps = [{id:lastId}];
+        }
+        lastId = P.projects[0].jobs.push(job) - 1;
+      }
+    });
+    var json = JSON.stringify(P);
+    // on fait une requete sur l'API
+    fetch(`${apiUrl}/api/project`, {
+      method: "PUT",
+      body: json,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(() => {
+      location.reload();
+    });
+  });
+  // read as text file
+  reader.readAsText(file);
 }

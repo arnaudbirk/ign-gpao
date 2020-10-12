@@ -1,5 +1,5 @@
 export URL_API=localhost
-export URL_API_PORT=8080
+export API_PORT=8080
 
 if [ "$(docker ps -aq -f name=monitor-gpao)" ]; then
     echo "Suppression du container monitor-gpao"

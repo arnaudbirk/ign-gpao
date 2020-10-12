@@ -1,9 +1,12 @@
 const axios = require('axios');
 
 async function getHosts(req, res, next) {
-  const json = await axios.get(`${req.app.api_url}/api/nodes`);
+  const json = await axios.get(`${req.app.get('apiUrl')}/api/nodes`);
 
-  req.body = json.data;
+  const hosts = json.data;
+
+  req.hosts = hosts;
+
   next();
 }
 

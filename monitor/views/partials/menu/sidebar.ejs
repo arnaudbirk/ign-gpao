@@ -36,8 +36,10 @@
       </a>
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-          <a class="collapse-item" href="buttons.html">A partir d'un Json</a>
-          <a class="collapse-item" href="cards.html">A partir d'un fichier texte</a>
+          <a class="collapse-item" onclick="document.getElementById('file-json').click();">A partir d'un Json</a>
+          <input id="file-json" type="file" name="name" onchange="jsonChanged(this.files[0])" style="display: none;" />
+          <a class="collapse-item" onclick="document.getElementById('file-txt').click();">A partir d'un fichier texte</a>
+          <input id="file-txt" type="file" name="name" onchange="txtChanged(this.files[0])" style="display: none;" />
         </div>
       </div>
     </li>

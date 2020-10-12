@@ -568,36 +568,36 @@ ALTER TABLE public.view_job OWNER TO postgres;
 --
 
 CREATE VIEW public.view_job_status AS
- SELECT sum(
+ SELECT COALESCE(sum(
         CASE
             WHEN (jobs.status = 'ready'::public.status) THEN 1
             ELSE 0
-        END) AS ready,
-    sum(
+        END), (0)::bigint) AS ready,
+    COALESCE(sum(
         CASE
             WHEN (jobs.status = 'done'::public.status) THEN 1
             ELSE 0
-        END) AS done,
-    sum(
+        END), (0)::bigint) AS done,
+    COALESCE(sum(
         CASE
             WHEN (jobs.status = 'waiting'::public.status) THEN 1
             ELSE 0
-        END) AS waiting,
-    sum(
+        END), (0)::bigint) AS waiting,
+    COALESCE(sum(
         CASE
             WHEN (jobs.status = 'running'::public.status) THEN 1
             ELSE 0
-        END) AS running,
-    sum(
+        END), (0)::bigint) AS running,
+    COALESCE(sum(
         CASE
             WHEN (jobs.status = 'failed'::public.status) THEN 1
             ELSE 0
-        END) AS failed,
-    sum(
+        END), (0)::bigint) AS failed,
+    COALESCE(sum(
         CASE
             WHEN ((jobs.status = 'failed'::public.status) OR (jobs.status = 'running'::public.status) OR (jobs.status = 'waiting'::public.status) OR (jobs.status = 'done'::public.status) OR (jobs.status = 'ready'::public.status)) THEN 1
             ELSE 0
-        END) AS total
+        END), (0)::bigint) AS total
    FROM public.jobs;
 
 
@@ -646,6 +646,46 @@ CREATE VIEW public.view_project_status AS
 
 
 ALTER TABLE public.view_project_status OWNER TO postgres;
+
+--
+-- Name: view_sessions_status; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.view_sessions_status AS
+ SELECT sum(
+        CASE
+            WHEN (sessions.status = 'idle'::public.session_status) THEN 1
+            ELSE 0
+        END) AS idle,
+    sum(
+        CASE
+            WHEN (sessions.status = 'idle_requested'::public.session_status) THEN 1
+            ELSE 0
+        END) AS idle_requested,
+    sum(
+        CASE
+            WHEN (sessions.status = 'active'::public.session_status) THEN 1
+            ELSE 0
+        END) AS active,
+    sum(
+        CASE
+            WHEN (sessions.status = 'running'::public.session_status) THEN 1
+            ELSE 0
+        END) AS running,
+    sum(
+        CASE
+            WHEN (sessions.status = 'closed'::public.session_status) THEN 1
+            ELSE 0
+        END) AS closed,
+    sum(
+        CASE
+            WHEN ((sessions.status = 'idle'::public.session_status) OR (sessions.status = 'running'::public.session_status) OR (sessions.status = 'closed'::public.session_status) OR (sessions.status = 'idle_requested'::public.session_status) OR (sessions.status = 'active'::public.session_status)) THEN 1
+            ELSE 0
+        END) AS total
+   FROM public.sessions;
+
+
+ALTER TABLE public.view_sessions_status OWNER TO postgres;
 
 --
 -- Name: jobdependencies id; Type: DEFAULT; Schema: public; Owner: postgres

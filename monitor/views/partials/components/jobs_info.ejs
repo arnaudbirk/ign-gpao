@@ -26,7 +26,7 @@
       <div class="progress mb-4">
           <div id="job_status_done_pg" class="progress-bar bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
-      <h4 class="small font-weight-bold">Failed<span id="job_status_failed_value" class="float-right"><script>percent(<%= jobs_status.failed %>, <%= jobs_status.total %>);</script>%</span></h4>
+      <h4 class="small font-weight-bold">Failed<span id="job_status_failed_value" class="float-right"><script>percent(<%= jobStatus.failed %>, <%= jobStatus.total %>);</script>%</span></h4>
       <div class="progress mb-4">
           <div id="job_status_failed_pg" class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
@@ -36,19 +36,19 @@
 
 <script type="text/javascript">
   $(document).ready(function() {  
-      $('#job_status_ready_pg').attr('style', 'width: '+percent(<%= jobs_status.ready %>, <%= jobs_status.total %>)+"%");
-      $('#job_status_ready_value').text(percent(<%= jobs_status.ready %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_ready_pg').attr('style', 'width: '+percent(<%= jobStatus.ready %>, <%= jobStatus.total %>)+"%");
+      $('#job_status_ready_value').text(percent(<%= jobStatus.ready %>, <%= jobStatus.total %>)+"%");
 
-      $('#job_status_running_pg').attr('style', 'width: '+percent(<%= jobs_status.running %>, <%= jobs_status.total %>)+"%");
-      $('#job_status_running_value').text(percent(<%= jobs_status.running %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_running_pg').attr('style', 'width: '+percent(<%= jobStatus.running %>, <%= jobStatus.total %>)+"%");
+      $('#job_status_running_value').text(percent(<%= jobStatus.running %>, <%= jobStatus.total %>)+"%");
 
-      $('#job_status_waiting_pg').attr('style', 'width: '+percent(<%= jobs_status.waiting %>, <%= jobs_status.total %>)+"%");
-      $('#job_status_waiting_value').text(percent(<%= jobs_status.waiting %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_waiting_pg').attr('style', 'width: '+percent(<%= jobStatus.waiting %>, <%= jobStatus.total %>)+"%");
+      $('#job_status_waiting_value').text(percent(<%= jobStatus.waiting %>, <%= jobStatus.total %>)+"%");
 
-      $('#job_status_done_pg').attr('style', 'width: '+percent(<%= jobs_status.done %>, <%= jobs_status.total %>)+"%");
-      $('#job_status_done_value').text(percent(<%= jobs_status.done %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_done_pg').attr('style', 'width: '+percent(<%= jobStatus.done %>, <%= jobStatus.total %>)+"%");
+      $('#job_status_done_value').text(percent(<%= jobStatus.done %>, <%= jobStatus.total %>)+"%");
 
-      $('#job_status_failed_pg').attr('style', 'width: '+percent(<%= jobs_status.failed %>, <%= jobs_status.total %>)+"%");
-      $('#job_status_failed_value').text(percent(<%= jobs_status.failed %>, <%= jobs_status.total %>)+"%");
+      $('#job_status_failed_pg').attr('style', 'width: '+percent(<%= jobStatus.failed %>, <%= jobStatus.total %>)+"%");
+      $('#job_status_failed_value').text(percent(<%= jobStatus.failed %>, <%= jobStatus.total %>)+"%");
   } );
   </script>

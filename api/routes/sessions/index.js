@@ -15,6 +15,12 @@ router.get('/sessions',
   pgClient.close,
   returnMsg);
 
+router.get('/sessions/status',
+  pgClient.open,
+  sessions.getSessionStatus,
+  pgClient.close,
+  returnMsg);
+
 router.put('/session', [
   query('host')
     .exists().withMessage(createErrorMsg.getMissingParameterMsg('host'))],
