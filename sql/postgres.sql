@@ -652,32 +652,32 @@ ALTER TABLE public.view_project_status OWNER TO postgres;
 --
 
 CREATE VIEW public.view_project_status_global AS
- SELECT SUM(
+ SELECT sum(
         CASE
             WHEN (projects.status = 'ready'::public.status) THEN 1
             ELSE 0
         END) AS ready,
-    SUM(
+    sum(
         CASE
             WHEN (projects.status = 'done'::public.status) THEN 1
             ELSE 0
         END) AS done,
-    SUM(
+    sum(
         CASE
             WHEN (projects.status = 'waiting'::public.status) THEN 1
             ELSE 0
         END) AS waiting,
-    SUM(
+    sum(
         CASE
             WHEN (projects.status = 'running'::public.status) THEN 1
             ELSE 0
         END) AS running,
-    SUM(
+    sum(
         CASE
             WHEN (projects.status = 'failed'::public.status) THEN 1
             ELSE 0
         END) AS failed,
-    SUM(
+    sum(
         CASE
             WHEN ((projects.status = 'failed'::public.status) OR (projects.status = 'running'::public.status) OR (projects.status = 'waiting'::public.status) OR (projects.status = 'done'::public.status) OR (projects.status = 'ready'::public.status)) THEN 1
             ELSE 0
@@ -692,36 +692,36 @@ ALTER TABLE public.view_project_status_global OWNER TO postgres;
 --
 
 CREATE VIEW public.view_sessions_status AS
- SELECT SUM(
+ SELECT COALESCE(sum(
         CASE
             WHEN (sessions.status = 'idle'::public.session_status) THEN 1
             ELSE 0
-        END) AS idle,
-    SUM(
+        END), (0)::bigint) AS idle,
+    COALESCE(sum(
         CASE
             WHEN (sessions.status = 'idle_requested'::public.session_status) THEN 1
             ELSE 0
-        END) AS idle_requested,
-    SUM(
+        END), (0)::bigint) AS idle_requested,
+    COALESCE(sum(
         CASE
             WHEN (sessions.status = 'active'::public.session_status) THEN 1
             ELSE 0
-        END) AS active,
-    SUM(
+        END), (0)::bigint) AS active,
+    COALESCE(sum(
         CASE
             WHEN (sessions.status = 'running'::public.session_status) THEN 1
             ELSE 0
-        END) AS running,
-    SUM(
+        END), (0)::bigint) AS running,
+    COALESCE(sum(
         CASE
             WHEN (sessions.status = 'closed'::public.session_status) THEN 1
             ELSE 0
-        END) AS closed,
-    SUM(
+        END), (0)::bigint) AS closed,
+    COALESCE(sum(
         CASE
             WHEN ((sessions.status = 'idle'::public.session_status) OR (sessions.status = 'running'::public.session_status) OR (sessions.status = 'closed'::public.session_status) OR (sessions.status = 'idle_requested'::public.session_status) OR (sessions.status = 'active'::public.session_status)) THEN 1
             ELSE 0
-        END) AS total
+        END), (0)::bigint) AS total
    FROM public.sessions;
 
 
