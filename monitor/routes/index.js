@@ -8,11 +8,11 @@ const dependencies = require('../middlewares/dependencies');
 const topBar = require('../middlewares/topBar');
 
 // dashboard page
-router.get('/', topBar.getInfo, projects.getProjects, (req, res) => {
+router.get('/', topBar.getInfo, projects.getProjectStatus, (req, res) => {
   res.render('pages/index', {
     topBar: req.topBar,
     jobStatus: req.topBar.jobStatus,
-    projects: req.projects,
+    projects: req.projectStatus,
     api: req.app.get('apiUrl'),
     server: req.app.get('server'),
   });

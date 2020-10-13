@@ -9,6 +9,16 @@ async function getProjects(req, res, next) {
   next();
 }
 
+async function getProjectStatus(req, res, next) {
+  const json = await axios.get(`${req.app.get('apiUrl')}/api/projects/status`);
+
+  const projects = json.data;
+
+  req.projectStatus = projects;
+  next();
+}
+
 module.exports = {
   getProjects,
+  getProjectStatus,
 };

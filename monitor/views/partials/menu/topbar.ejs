@@ -126,14 +126,16 @@
         $('#topbar_jobs_pg').attr('style', 'width: '+percent(<%= topBar.jobStatus.done %>, <%= topBar.jobStatus.total %>)+"%");
         $('#topbar_jobs_value').text(percent(<%= topBar.jobStatus.done %>, <%= topBar.jobStatus.total %>)+"%");
 
-        $('#topbar_sessions_pg').attr('style', 'width: '+percent(<%= topBar.sessionStatus.active %>, <%= topBar.sessionStatus.total %>)+"%");
-        $('#topbar_sessions_value').text(percent(<%= topBar.sessionStatus.active %>, <%= topBar.sessionStatus.total %>)+"%");
+        <% if (topBar.sessionStatus) { %>
+          $('#topbar_sessions_pg').attr('style', 'width: '+percent(<%= topBar.sessionStatus.active %>, <%= topBar.sessionStatus.total %>)+"%");
+          $('#topbar_sessions_value').text(percent(<%= topBar.sessionStatus.active %>, <%= topBar.sessionStatus.total %>)+"%");
+          <% } %>
 
         $('#topbar_hosts_value').text(<%= topBar.nbHosts %>);
 
-        <% if (topBar.projectStatus) { %>
-          $('#topbar_projects_pg').attr('style', 'width: '+percent(<%= topBar.projectStatus.done %>, <%= topBar.projectStatus.total %>)+"%");
-          $('#topbar_projects_value').text(percent(<%= topBar.projectStatus.done %>, <%= topBar.projectStatus.total %>)+"%");
+        <% if (topBar.projectStatusGlobal) { %>
+          $('#topbar_projects_pg').attr('style', 'width: '+percent(<%= topBar.projectStatusGlobal.done %>, <%= topBar.projectStatusGlobal.total %>)+"%");
+          $('#topbar_projects_value').text(percent(<%= topBar.projectStatusGlobal.done %>, <%= topBar.projectStatusGlobal.total %>)+"%");
         <% } %>
 
         

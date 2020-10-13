@@ -46,4 +46,10 @@ router.get('/projects/status',
   pgClient.close,
   returnMsg);
 
+router.get('/projects/status_global',
+  pgClient.open,
+  project.getProjectStatusGlobal,
+  pgClient.close,
+  returnMsg);
+
 module.exports = router;

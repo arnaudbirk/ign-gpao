@@ -22,12 +22,12 @@ async function getHostStatus(req) {
   req.topBar.nbHosts = json.data.length;
 }
 
-async function getProjectStatus(req) {
-  const json = await axios.get(`${req.app.get('apiUrl')}/api/projects/status`);
+async function getProjectStatusGlobal(req) {
+  const json = await axios.get(`${req.app.get('apiUrl')}/api/projects/status_global`);
 
-  const projectStatus = json.data[0];
+  const projectStatusGlobal = json.data[0];
 
-  req.topBar.projectStatus = projectStatus;
+  req.topBar.projectStatusGlobal = projectStatusGlobal;
 }
 
 async function getInfo(req, res, next) {
@@ -36,7 +36,7 @@ async function getInfo(req, res, next) {
   await getJobStatus(req);
   await getSessionStatus(req);
   await getHostStatus(req);
-  await getProjectStatus(req);
+  await getProjectStatusGlobal(req);
 
   next();
 }

@@ -183,6 +183,15 @@ paths:
       responses:
         '200':
           description: OK
+  '/projects/status_global':
+    get:
+      tags:
+        - projects
+      summary: "Récupération du statut global de tous les projets"
+      description: "Récupération du nombre de projet par statut"
+      responses:
+        '200':
+          description: OK
   '/nodes':
     get:
       tags:
