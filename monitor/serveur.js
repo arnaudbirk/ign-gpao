@@ -9,8 +9,11 @@ const MONITOR_PORT = process.env.MONITOR_PORT || 8000;
 const URL_API = process.env.URL_API || 'localhost';
 const API_PORT = process.env.API_PORT || 8080;
 
+const SERVER = process.env.SERVER || 'localhost';
+
 app.set('apiUrl', `http://${URL_API}:${API_PORT}`);
 app.set('apiMonitor', `http://${URL_MONITOR}:${MONITOR_PORT}`);
+app.set('server', SERVER);
 
 const routes = require('./routes');
 
