@@ -1,10 +1,3 @@
-NB_PROC=`grep processor /proc/cpuinfo | wc -l`
-NB_PROC=$(( $NB_PROC - 1))
-if [ $NB_PROC -lt 1 ]
-then
-    NB_PROC=1
-fi
+export SERVER=$HOSTNAME
 
-#echo "Lancement de $NB_PROC thread(s)"
-
-docker-compose -f docker-compose.yml up
+docker-compose -f docker-compose.yml up -d --scale client-gpao=0

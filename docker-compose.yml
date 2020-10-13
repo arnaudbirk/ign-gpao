@@ -21,6 +21,8 @@ services:
     hostname: api-gpao
     image: api-gpao
     restart: always
+    environment:
+     - SERVER=${SERVER}
     env_file:
      - docker/api.env
     depends_on:

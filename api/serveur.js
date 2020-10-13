@@ -30,7 +30,7 @@ const options = {
 };
 
 const swaggerDocument = YAML.load('./doc/swagger.yml');
-const hostname = os.hostname();
+const hostname = process.env.SERVER || os.hostname();
 swaggerDocument.servers[0].url = `http://${hostname}:${PORT}/api`;
 
 app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
