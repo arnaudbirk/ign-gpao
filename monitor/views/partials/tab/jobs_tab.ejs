@@ -1,4 +1,4 @@
-<div class="card shadow mb-4">
+<div class="card shadow mb-4 border-left-primary h-100 py-2">
   <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary">Jobs</h6>
   </div>
@@ -7,7 +7,8 @@
       <table class="table table-bordered table-striped" id="dataTable" cellspacing="0">
         <thead>
 			<tr>
-				<th>Id</th>
+        <th>Id</th>
+        <th>Nom</th>
 				<th>Status</th>
 				<th>Code retour</th>
 				<th>Date début</th>
@@ -18,7 +19,8 @@
 		</thead>
         <tfoot>
 			<tr>
-				<th>Id</th>
+        <th>Id</th>
+        <th>Nom</th>
 				<th>Status</th>
 				<th>Code retour</th>
 				<th>Date début</th>
@@ -31,6 +33,7 @@
         <% jobs.forEach(function( job ){ %>
             <tr>
                 <td> <%= job.id %></td>
+                <td> <%= job.name %></td>
                 <td> <%= job.status %></td>
                 <td> <%= job.return_code %></td>
                 <td> <%= job.start_date %></td>
