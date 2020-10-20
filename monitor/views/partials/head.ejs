@@ -43,9 +43,33 @@ $(document).ready(function() {
             }
         },
         "order": [[ 0, "asc" ]],
-        "dom": '<"d-flex"<"mr-auto p-2"l><"p-2"f>>t<"d-flex"<"mr-auto p-2"i><"p-2"p>>'
+        "dom": '<"d-flex"<"mr-auto p-2"l><"p-2"f>>t<"d-flex"<"mr-auto p-2"i><"p-2"p>>',
+        "rowCallback": function( row, data, index ) {
+            var status = data[2];
+            switch(status){
+                case "failed":
+                case "closed":
+                    $('td', row).addClass('text-danger');
+                    break;
+                case "running":
+                    $('td', row).addClass('text-warning');
+                    break;
+                case "waiting":
+                case "idle":
+                    $('td', row).addClass('text-secondary');
+                    break;
+                case "done":
+                case "active":
+                    $('td', row).addClass('text-success');
+                    break;
+                case "ready":
+                case "idle_requested":
+                    $('td', row).addClass('text-primary');
+                    break;
+
+            }
+        }
     } );
-    $('#job_status_pg').attr('style', 'width: 50%');
 } );
 </script>
 
