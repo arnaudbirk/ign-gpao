@@ -22,7 +22,7 @@ services:
     image: api-gpao
     restart: always
     environment:
-     - SERVER=${SERVER}
+     - SERVER=${SERVER_HOSTNAME}
     env_file:
      - docker/api.env
     depends_on:
@@ -40,7 +40,7 @@ services:
     image: monitor-gpao
     restart: always
     environment:
-     - SERVER=${SERVER}
+     - SERVER=${SERVER_HOSTNAME}
     env_file:
       - docker/monitor.env
     depends_on:
