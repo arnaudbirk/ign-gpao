@@ -1,0 +1,20 @@
+name: Docker Compose Actions Workflow
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: sh build-image.sh
+      - name: Start the stack
+        run: docker-compose up -d
+      - name: waiting for postgres ok
+        run: while ! pg_isready -h 0.0.0.0 -p 5432; do echo on attend; sleep 1; done; echo ok
+      - name: create db
+        run: sh create-db.sh
+      - name: Test
+        run: sh test.sh
+      - name: down
+        run: docker-compose down
