@@ -21,11 +21,11 @@ async function insertProject(name, req) {
   return idProject;
 }
 
-async function insertJob(name, command, idProject, req) {
+async function insertJob(name, command, nbAttempts, idProject, req) {
   debug(`Insertion du job ${name}`);
   let idJob;
   try {
-    const results = await req.client.query('INSERT INTO jobs (name, command, id_project) VALUES ($1, $2, $3) RETURNING id', [name, command, idProject]);
+    const results = await req.client.query('INSERT INTO jobs (name, command, nb_attempts, id_project) VALUES ($1, $2, $3, $4) RETURNING id', [name, command, nbAttempts, idProject]);
     idJob = results.rows[0].id;
     req.idJobs.push(idJob);
   } catch (error) {
@@ -83,8 +83,9 @@ async function insertProjectFromJson(req, res, next) {
     debug(`id_project = ${idProject}`);
     /* eslint-disable no-restricted-syntax */
     for (const job of project.jobs) {
+      const nbAttempts = job.nb_attempts ? job.nb_attempts : 1;
       /* eslint-disable no-await-in-loop */
-      const idJob = await insertJob(job.name, job.command, idProject, req);
+      const idJob = await insertJob(job.name, job.command, nbAttempts, idProject, req);
       debug(`id_job = ${idJob}`);
       // Si il y a des dépendances entre les jobs
       if (job.deps) {

@@ -190,6 +190,7 @@ paths:
                     jobs:
                       - name: jobs 1
                         command: touch file1
+                        nb_attempts: 2
                       - name: jobs 2
                         command: touch file2
                       - name: jobs 3

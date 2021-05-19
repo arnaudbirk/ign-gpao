@@ -28,6 +28,9 @@ module.exports = function checlProjectSchema(project) {
                   command: {
                     type: 'string',
                   },
+                  nb_attempts: {
+                    type: 'integer',
+                  },
                   deps: {
                     type: 'array',
                     items: {

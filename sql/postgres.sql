@@ -254,6 +254,37 @@ $$;
 ALTER FUNCTION public.update_jobdependencies_when_job_done() OWNER TO postgres;
 
 --
+-- Name: update_jobattempts_when_job_failed(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.update_jobattempts_when_job_failed() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF (NEW.status = 'failed' AND NEW.status <> OLD.status AND NEW.nb_attempts > 0) THEN
+    UPDATE public.jobs SET status='ready', 
+        nb_attempts = nb_attempts-1, 
+        log= CONCAT(log, 
+            '\nfailed with code : ', 
+            CAST(return_code AS VARCHAR),
+            ' in session : ',
+            CAST(id_session AS VARCHAR),
+            ' at ',
+            CAST(end_date AS VARCHAR),
+            '\n'),
+        return_code = NULL,
+        id_session = NULL,
+        start_date = NULL,
+        end_date = NULL WHERE id = NEW.id;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.update_jobattempts_when_job_failed() OWNER TO postgres;
+
+--
 -- Name: update_project_when_job_done(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -435,7 +466,8 @@ CREATE TABLE public.jobs (
     return_code bigint,
     log character varying,
     id_project integer NOT NULL,
-    id_session integer
+    id_session integer,
+    nb_attempts integer DEFAULT 1
 );
 
 
@@ -605,6 +637,7 @@ CREATE VIEW public.view_job AS
     jobs.status AS job_status,
     jobs.return_code AS job_return_code,
     jobs.log AS job_log,
+    jobs.nb_attempts AS job_nb_attempts,
     projects.id AS project_id,
     projects.name AS project_name,
     projects.status AS project_status,
@@ -907,6 +940,13 @@ ALTER TABLE ONLY public.projectdependencies
 
 ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jobs update_jobattempts_when_job_failed; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER update_jobattempts_when_job_failed AFTER UPDATE OF status ON public.jobs FOR EACH ROW EXECUTE PROCEDURE public.update_jobattempts_when_job_failed();
 
 
 --
